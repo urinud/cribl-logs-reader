@@ -1,6 +1,5 @@
 const fs = require("fs");
-
-const BUFFER_SIZE = 1024; // 1KB
+const config = require("./config");
 
 function readLogFile(filePath, lineCount, regexPattern) {
   // Get File Info
@@ -11,7 +10,7 @@ function readLogFile(filePath, lineCount, regexPattern) {
   const filteredLines = [];
   const fd = fs.openSync(filePath, "r");
   while (remainingBytes > 0 && filteredLines.length < lineCount) {
-    const readSize = Math.min(BUFFER_SIZE, remainingBytes);
+    const readSize = Math.min(config.BUFFER_SIZE, remainingBytes);
     const readBuffer = Buffer.alloc(readSize);
     fs.readSync(fd, readBuffer, 0, readSize, remainingBytes - readSize);
     buffer = readBuffer.toString("utf8") + buffer;
@@ -30,7 +29,7 @@ function readLogFile(filePath, lineCount, regexPattern) {
     }
     remainingBytes -= readSize;
   }
-  if (buffer) {
+  if (filteredLines.length < lineCount && buffer) {
     if (!regexPattern || regexPattern.test(buffer)) {
       filteredLines.push(buffer);
     }
