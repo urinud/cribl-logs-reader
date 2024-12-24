@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Logs Viewer</title>
+  </head>
+  <body>
+    <h1>Logs Viewer</h1>
+    <div id="logs-list">
+      <h2>List of Files</h2>
+      <button onclick="fetchLogs()">Fetch Logs</button>
+      <ul id="log-list"></ul>
+    </div>
+    <hr />
+    <div id="logs-content">
+      <h2>Log Content</h2>
+      <label for="filename">Filename:</label>
+      <input type="text" id="filename" />
+      <br />
+      <label for="regex">Filter Regex:</label>
+      <input type="text" id="regex" />
+      <br />
+      <label for="lines">Number of Lines:</label>
+      <input type="number" id="lines" />
+      <br />
+      <button onclick="fetchLogContent()">Fetch Content</button>
+      <pre id="log-content"></pre>
+    </div>
+    <script>
+      async function fetchLogs() {
+        const response = await fetch("/logs");
+        const data = await response.json();
+        const logList = document.getElementById("log-list");
+        logList.innerHTML = "";
+        data.files.forEach((file) => {
+          const li = document.createElement("li");
+          li.textContent = file;
+          logList.appendChild(li);
+        });
+      }
+      async function fetchLogContent() {
+        // Get parameters
+        const filename = document.getElementById("filename").value;
+        const regex = document.getElementById("regex").value;
+        const lines = document.getElementById("lines").value;
+        // Prepare GET
+        const query = new URLSearchParams();
+        if (regex) {
+          query.append("regex", regex);
+        }
+        if (lines) {
+          query.append("lines", lines);
+        }
+        const response = await fetch(`/logs/${filename}?${query.toString()}`);
+        const data = await response.json();
+        const logContent = document.getElementById("log-content");
+        logContent.textContent = data.lines.join("\n");
+      }
+    </script>
+  </body>
+</html>
