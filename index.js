@@ -62,10 +62,12 @@ app.get("/logs/:filename(*)", (req, res) => {
   }
 });
 
+// Returns the list of known servers
 app.get("/cloud/servers", (req, res) => {
   res.json(cloudLogs.getKnownServers());
 });
 
+// Adds a new server to the list of known servers
 app.post("/cloud/servers", (req, res) => {
   if (!req.body?.name || !req.body?.host || !req.body?.port) {
     return res.status(400).send("Invalid request body");
@@ -78,8 +80,19 @@ app.post("/cloud/servers", (req, res) => {
   res.status(201).send("Server added successfully");
 });
 
+// Returns the list of log files from all known servers
 app.get("/cloud/logs", (req, res) => {
-  cloudLogs.getAllLogs((logs) => {
+  cloudLogs.getAllLogFiles((logs) => {
+    res.json(logs);
+  });
+});
+
+// Returns the content of the log file from all known servers
+app.get("/cloud/logs/:filename(*)", (req, res) => {
+  const { filename } = req.params;
+  const { regex, lines } = req.query;
+
+  cloudLogs.getAllLogs(filename, lines, regex, (logs) => {
     res.json(logs);
   });
 });
