@@ -100,6 +100,10 @@ GET /logs/syslog.log?regex=error&lines=10
   - `lines`: 25
   - No filter if `regex` is not specified.
 
+## Distributed Requests
+An initial implementation of a distributed request model was added.
+Please check the [documentation](REQ-DISTRIBUTED.md).
+
 ## Future Improvements
 - Detect compressed files (gz, bz2).
 
