@@ -8,7 +8,7 @@ This project provides a Node.js service using Express.js to explore and filter l
 3. **Simple UI**: A web-based user interface to interact with the APIs.
 
 ## Requirements
-- Node.js (version 14 or higher)
+- Node.js (version 20 or higher)
 - NPM
 
 ## Installation
@@ -99,6 +99,9 @@ GET /logs/syslog.log?regex=error&lines=10
 - Default values:
   - `lines`: 25
   - No filter if `regex` is not specified.
+
+## Future Improvements
+- Detect compressed files (gz, bz2).
 
 ## License
 This project is licensed under the ISC License.
