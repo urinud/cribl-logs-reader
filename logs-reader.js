@@ -29,7 +29,7 @@ function readLogFile(filePath, lineCount, regexPattern) {
     }
     remainingBytes -= readSize;
   }
-  if (buffer) {
+  if (filteredLines.length < lineCount && buffer) {
     if (!regexPattern || regexPattern.test(buffer)) {
       filteredLines.push(buffer);
     }
