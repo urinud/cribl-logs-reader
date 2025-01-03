@@ -30,16 +30,15 @@ app.get("/logs", (req, res) => {
 app.get("/logs/:filename(*)", (req, res) => {
   const { filename } = req.params;
   const { regex, lines } = req.query;
+  console.log("Filename: " + filename);
   // Validate filename
-  if (filename.includes("..")) {
-    console.log("Invalid filename: " + filename);
-    return res.status(403).send("Invalid filename");
-  }
   const normalizedFilename = path.normalize(filename);
-  const sanitizedFilename = normalizedFilename.replace(/^(\.\.(\/|\\|$))+/, "");
-
-  const filePath = path.join(config.LOG_DIR, sanitizedFilename);
-
+  console.log("Normalized filename: " + normalizedFilename);
+  const filePath = path.join(config.LOG_DIR, normalizedFilename);
+  console.log("File path: " + filePath);
+  if (!filePath.startsWith(config.LOG_DIR)) {
+    return res.status(403).send("Invalid filename. Path traversal detected.");
+  }
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("File not found");
   }
