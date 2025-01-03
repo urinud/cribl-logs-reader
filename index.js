@@ -30,7 +30,15 @@ app.get("/logs", (req, res) => {
 app.get("/logs/:filename(*)", (req, res) => {
   const { filename } = req.params;
   const { regex, lines } = req.query;
-  const filePath = path.join(config.LOG_DIR, filename);
+  // Validate filename
+  if (filename.includes("..")) {
+    console.log("Invalid filename: " + filename);
+    return res.status(403).send("Invalid filename");
+  }
+  const normalizedFilename = path.normalize(filename);
+  const sanitizedFilename = normalizedFilename.replace(/^(\.\.(\/|\\|$))+/, "");
+
+  const filePath = path.join(config.LOG_DIR, sanitizedFilename);
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("File not found");

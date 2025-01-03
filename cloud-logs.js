@@ -1,6 +1,5 @@
 const http = require("http");
 const config = require("./config");
-const path = require("path");
 
 const knownServers = [{ name: "local", host: "localhost", port: config.PORT }];
 
